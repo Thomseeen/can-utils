@@ -206,12 +206,15 @@ int main(int argc, char **argv)
     }
 
     if ((argc - optind != 1) ||
-	(addr.can_addr.tp.tx_id == NO_CAN_ID) ||
-	(addr.can_addr.tp.rx_id == NO_CAN_ID)) {
-	    print_usage(basename(argv[0]));
-	    exit(1);
+        (addr.can_addr.tp.tx_id == NO_CAN_ID)) {
+            print_usage(basename(argv[0]));
+            exit(1);
     }
-  
+
+    if(addr.can_addr.tp.rx_id == NO_CAN_ID) {
+        opts.flags |= CAN_ISOTP_SF_BROADCAST;
+    }
+
     if ((s = socket(PF_CAN, SOCK_DGRAM, CAN_ISOTP)) < 0) {
 	perror("socket");
 	exit(1);
